@@ -6,8 +6,14 @@ import Iphone1 from "app/src/assets/iphone1.png";
 import Iphone2 from "app/src/assets/iphone2.png";
 import Iphone3 from "app/src/assets/iphone3.png";
 import Iphone4 from "app/src/assets/iphone4.png";
-import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from "~/components/ui/drawer";
-import Logo from 'app/src/assets/logo.svg?react'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "~/components/ui/drawer";
+import Logo from "app/src/assets/logo.svg?react";
 
 const SLIDE_CLASSNAME = "w-3/4 h-auto max-h-[70vh]";
 
@@ -107,9 +113,15 @@ const LoginPage = () => {
       {/* Drawer with custom height */}
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerContent className="absolute inset-x-0 mx-auto flex items-center justify-center max-w-sm min-h-[65%] rounded-t-xl bg-white border-none">
-        <DrawerHeader>
-        <Logo />
-        <DrawerTitle>Let's Get Started</DrawerTitle></DrawerHeader>
+          <DrawerHeader className="flex w-full flex-col gap-6 items-center justify-center">
+            <Logo />
+            <DrawerTitle className="text-[#0A4D68] font-bold tracking-wide text-xl">
+              Let’s get started
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="w-full flex justify-center items-center flex-col gap-4">
+            <p className="text-black text-sm font-medium">Choose your role</p>
+          </div>
           <DrawerFooter>
             <Button onClick={() => setIsDrawerOpen(false)}>Close</Button>
           </DrawerFooter>
