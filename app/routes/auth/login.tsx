@@ -6,14 +6,16 @@ import Iphone1 from "app/src/assets/iphone1.png";
 import Iphone2 from "app/src/assets/iphone2.png";
 import Iphone3 from "app/src/assets/iphone3.png";
 import Iphone4 from "app/src/assets/iphone4.png";
+import PatientIcon from "app/src/assets/patient.svg?react";
+import DoctorIcon from "app/src/assets/doctor.svg?react";
 import {
   Drawer,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "~/components/ui/drawer";
 import Logo from "app/src/assets/logo.svg?react";
+import { Link } from "react-router";
 
 const SLIDE_CLASSNAME = "w-3/4 h-auto max-h-[70vh]";
 
@@ -112,19 +114,36 @@ const LoginPage = () => {
 
       {/* Drawer with custom height */}
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <DrawerContent className="absolute inset-x-0 mx-auto flex items-center justify-center max-w-sm min-h-[65%] rounded-t-xl bg-white border-none">
-          <DrawerHeader className="flex w-full flex-col gap-6 items-center justify-center">
+        <DrawerContent className="absolute pb-[5rem] inset-x-0 mx-auto flex items-center justify-center max-w-sm rounded-t-xl bg-white border-none">
+          <DrawerHeader className="flex w-full flex-col gap-4 items-center justify-center">
             <Logo />
-            <DrawerTitle className="text-[#0A4D68] font-bold tracking-wide text-xl">
+            <DrawerTitle className="text-[#0A4D68] font-semibold tracking-wide text-xl">
               Let’s get started
             </DrawerTitle>
           </DrawerHeader>
-          <div className="w-full flex justify-center items-center flex-col gap-4">
-            <p className="text-black text-sm font-medium">Choose your role</p>
+          <div className="w-full px-6 flex justify-center items-center flex-col gap-2">
+            <p className="text-black text-sm mb-4 tracking-wide">
+              Choose your role
+            </p>
+            <Link className="w-full" to={"/next-login"}>
+              <Button
+                className="h-[2.8rem] font-normal rounded-full w-full"
+                size={"lg"}
+                variant={"primary"}
+              >
+                <PatientIcon className="w-8 h-8" /> Patient
+              </Button>
+            </Link>
+            <Link className="w-full" to={"/next-login"}>
+              <Button
+                className="h-[2.8rem] font-normal rounded-full w-full"
+                size={"lg"}
+                variant={"primary"}
+              >
+                <DoctorIcon className="w-8 h-8" /> Doctor
+              </Button>
+            </Link>
           </div>
-          <DrawerFooter>
-            <Button onClick={() => setIsDrawerOpen(false)}>Close</Button>
-          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </div>

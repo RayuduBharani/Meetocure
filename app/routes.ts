@@ -9,6 +9,7 @@ export default [
   index("routes/home.tsx"),
   layout("routes/auth/layout.tsx", [
     route("login", "routes/auth/login.tsx"),
+    route('next-login', 'routes/auth/next-login.tsx'),
     route("register", "routes/auth/register.tsx"),
   ]),
 ] satisfies RouteConfig;
