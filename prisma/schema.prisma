@@ -1,0 +1,290 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
+enum DayOfWeek {
+  Mon
+  Tue
+  Wed
+  Thu
+  Fri
+  Sat
+  Sun
+}
+
+enum AvailabilityType {
+  available
+  virtual_only
+  on_leave
+}
+
+enum AppointmentStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+}
+
+enum PaymentStatus {
+  success
+  failed
+  pending
+}
+
+enum TicketStatus {
+  open
+  resolved
+  closed
+}
+
+enum DiscountType {
+  percentage
+  flat
+}
+
+// Models
+model User {
+  id            String      @id @default(cuid())
+  full_name     String?
+  phone         String      @unique
+  role          Role
+  gender        String?
+  dob           DateTime?
+  profile_image String?
+  is_verified   Boolean     @default(false)
+  created_at    DateTime    @default(now())
+
+  patient       Patient?
+  doctor        Doctor?
+  medicalRecords MedicalRecord[] @relation("uploadedBy")
+  payments      Payment[]
+  notifications Notification[]
+  supportTickets SupportTicket[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Otp {
+  id        Int      @id @default(autoincrement())
+  phone     String   @unique
+  otp       String
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt DateTime @default(dbgenerated("NOW() + INTERVAL '5 minutes'")) @map("expires_at")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Patient {
+  id                 Int       @id @default(autoincrement())
+  user_id            String    @unique
+  blood_group        String?
+  chronic_conditions String?   @db.Text
+  emergency_contact  String?
+  created_at         DateTime  @default(now())
+  user               User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  appointments       Appointment[]
+  medicalRecords     MedicalRecord[]
+  reviews            Review[]
+}
+
+model Doctor {
+  id                Int       @id @default(autoincrement())
+  user_id           String    @unique
+  license_number    String    @unique
+  specialization    String
+  experience_years  Int
+  qualification     String
+  consultation_fee  Decimal   @default(0.00)
+  available         Boolean   @default(true)
+  location          String?
+  created_at        DateTime  @default(now())
+  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  hospitalDoctors   HospitalDoctor[]
+  availabilities    DoctorAvailability[]
+  unavailableDates  DoctorUnavailableDate[]
+  appointments      Appointment[]
+  reviews           Review[]
+}
+
+model Hospital {
+  id            Int      @id @default(autoincrement())
+  name          String
+  about         String?  @db.Text
+  contact_email String
+  contact_phone String
+  address_line  String
+  city          String
+  state         String
+  postal_code   String
+  location_url  String?
+  website       String?
+  image_url     String?
+  registered_at DateTime @default(now())
+
+  hospitalDoctors HospitalDoctor[]
+}
+
+model HospitalDoctor {
+  id          Int      @id @default(autoincrement())
+  hospital_id Int
+  doctor_id   Int
+  is_primary  Boolean  @default(false)
+  joined_at   DateTime @default(now())
+  hospital    Hospital @relation(fields: [hospital_id], references: [id], onDelete: Cascade)
+  doctor      Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+
+  @@unique([hospital_id, doctor_id])
+}
+
+model DoctorAvailability {
+  id               Int              @id @default(autoincrement())
+  doctor_id        Int
+  day_of_week      DayOfWeek
+  start_time       String
+  end_time         String
+  availability_type AvailabilityType
+  location         String?
+  created_at       DateTime         @default(now())
+  doctor           Doctor           @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+
+  @@unique([doctor_id, day_of_week, start_time, end_time])
+}
+
+model DoctorUnavailableDate {
+  id         Int      @id @default(autoincrement())
+  doctor_id  Int
+  date       DateTime @db.Date
+  reason     String?  @db.Text
+  created_at DateTime @default(now())
+  doctor     Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+
+  @@unique([doctor_id, date])
+}
+
+model Appointment {
+  id              Int               @id @default(autoincrement())
+  patient_id      Int
+  doctor_id       Int
+  appointment_date DateTime
+  status          AppointmentStatus @default(pending)
+  meeting_link    String?
+  notes           String?           @db.Text
+  coupon_code     String?
+  created_at      DateTime          @default(now())
+  patient         Patient           @relation(fields: [patient_id], references: [id], onDelete: Cascade)
+  doctor          Doctor            @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  coupon          DiscountCoupon?   @relation("AppointmentCoupon", fields: [coupon_code], references: [code])
+  payments        Payment[]
+}
+
+model MedicalRecord {
+  id           Int      @id @default(autoincrement())
+  patient_id   Int
+  file_url     String
+  record_type  String
+  description  String?  @db.Text
+  uploaded_by  String
+  uploaded_at  DateTime @default(now())
+  patient      Patient  @relation(fields: [patient_id], references: [id], onDelete: Cascade)
+  uploadedBy   User     @relation("uploadedBy", fields: [uploaded_by], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id              Int           @id @default(autoincrement())
+  user_id         String
+  appointment_id  Int
+  amount          Decimal
+  coupon_code     String?
+  payment_method  String
+  transaction_id  String        @unique
+  status          PaymentStatus
+  paid_at         DateTime      @default(now())
+  user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  appointment     Appointment   @relation(fields: [appointment_id], references: [id], onDelete: Cascade)
+  coupon          DiscountCoupon? @relation("PaymentCoupon", fields: [coupon_code], references: [code])
+}
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  patient_id  Int
+  doctor_id   Int
+  rating      Int
+  review      String?  @db.Text
+  created_at  DateTime @default(now())
+  patient     Patient  @relation(fields: [patient_id], references: [id], onDelete: Cascade)
+  doctor      Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+
+  @@unique([patient_id, doctor_id])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  user_id     String
+  message     String   @db.Text
+  seen        Boolean  @default(false)
+  sent_at     DateTime @default(now())
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model SupportTicket {
+  id          Int          @id @default(autoincrement())
+  user_id     String
+  subject     String
+  description String       @db.Text
+  status      TicketStatus @default(open)
+  created_at  DateTime     @default(now())
+  user        User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model DiscountCoupon {
+  id            Int          @id @default(autoincrement())
+  code          String       @unique
+  description   String?      @db.Text
+  discount_type DiscountType
+  value         Decimal
+  max_usage     Int
+  used_count    Int          @default(0)
+  expiry_date   DateTime
+  created_at    DateTime     @default(now())
+
+  appointments Appointment[] @relation("AppointmentCoupon")
+  payments     Payment[]     @relation("PaymentCoupon")
+}
