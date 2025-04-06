@@ -1,10 +1,14 @@
 import { Suspense } from "react";
 import LoginClient from "./LoginClient";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 // Server Component
-type Params = Promise<{role : string}>
-export default async function LoginPage({params} : {params : Params}) {
-  const {role} = await params
+export default async function LoginPage() {
+  const user = await auth()
+  if (user) {
+    redirect('/')
+  }
   const slides = [
     { key: "iphone1", src: "/phones/iphone1.png" },
     { key: "iphone2", src: "/phones/iphone2.png" },

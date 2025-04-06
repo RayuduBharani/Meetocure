@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Meetocure",
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={`${poppins.className} w-screen h-dvh antialiased`}
       >
         {children}
+        <Toaster richColors />
       </body>
     </html>
   );

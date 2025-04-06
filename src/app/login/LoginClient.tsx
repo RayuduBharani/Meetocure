@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
@@ -61,7 +62,7 @@ const LoginClient = ({ slides }: LoginClientProps) => {
   const handleSkip = () => setIsDrawerOpen(true);
 
   const handleRoleSelect = (role: string) => {
-    router.push(`/login?role=${role}`);
+    router.replace(`/next-login?role=${role}`,);
   };
 
   return (
@@ -74,6 +75,7 @@ const LoginClient = ({ slides }: LoginClientProps) => {
                 <Image
                   src={src}
                   alt={key}
+                  priority
                   width={300} // Adjust based on your image dimensions
                   height={500} // Adjust based on your image dimensions
                   className={SLIDE_CLASSNAME}
@@ -114,9 +116,11 @@ const LoginClient = ({ slides }: LoginClientProps) => {
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerContent className="absolute pb-[5rem] inset-x-0 mx-auto flex items-center justify-center max-w-sm rounded-t-xl bg-white border-none">
           <DrawerHeader className="flex w-full flex-col gap-4 items-center justify-center">
+            <DrawerDescription aria-readonly className='hidden'>Patient Doctor Login</DrawerDescription>
             <Image
               src="/logos/logo.svg"
               alt="Meetocure Logo"
+              className='w-auto h-auto'
               width={100} // Adjust based on your logo size
               height={100} // Adjust based on your logo size
             />
