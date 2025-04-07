@@ -1,6 +1,7 @@
 import React from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import NavBar from "@/components/navbar/nav";
 
 const DashboardLayout = async ({
   children,
@@ -26,15 +27,12 @@ const DashboardLayout = async ({
         return redirect("/login");
     }
   })
-  return <div>DashboardLayout
-    <div className="flex flex-col h-screen">
-      <div className="flex-1 overflow-y-auto">{children}</div>
-      <footer className="bg-gray-800 text-white p-4">
-        <p>Dashboard Footer</p>
-      </footer>
-    </div>
-    {dashboardContent()}
-  </div>;
+  return (
+    <>
+      <NavBar role={role as string} />
+      {dashboardContent()}
+    </>
+  );
 };
 
 export default DashboardLayout;

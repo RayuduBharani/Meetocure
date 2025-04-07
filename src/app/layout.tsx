@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.className} w-screen h-dvh antialiased`}
+        className={`${poppins.className} h-dvh overflow-x-hidden antialiased`}
       >
         {children}
         <Toaster richColors />
