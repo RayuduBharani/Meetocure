@@ -103,11 +103,11 @@ export default function UserDoctors() {
                             className="bg-white rounded-lg shadow border border-gray-100 overflow-hidden h-40"
                         >
                             <div className="flex h-full">
-                                <div className="w-32 h-full overflow-hidden">
+                                <div className="w-32 h-full overflow-hidden p-2">
                                     <img
                                         src={doctor.image}
                                         alt={doctor.name}
-                                        className="w-full h-full object-cover object-center"
+                                        className="w-full h-full rounded-md object-cover object-center"
                                     />
                                 </div>
 

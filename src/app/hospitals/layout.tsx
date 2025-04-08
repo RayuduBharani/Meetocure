@@ -2,7 +2,6 @@ import React from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/navbar/nav";
-import Footer from "@/components/footer";
 
 const HospitalLayout = async ({
     children,

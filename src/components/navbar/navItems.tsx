@@ -98,9 +98,9 @@ export default function Navitems({ role }: { role: string }) {
                     <DropdownMenuContent>
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Notifications</DropdownMenuItem>
-                        <DropdownMenuItem>Wallet</DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href={"/profile"}>Profile</Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href={"/notifications"}>Notifications</Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href={"/wallet"}>Wallet</Link></DropdownMenuItem>
                         <DropdownMenuItem>Messages</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

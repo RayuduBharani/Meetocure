@@ -21,7 +21,7 @@ export default function Categories() {
         <div className="w-full grid grid-cols-8 max-sm:grid-cols-4 max-md:grid-cols-5 gap-3">
           {categories.map((category, index) => (
             <div key={index} className="flex flex-col items-center">
-              <div className="w-16 h-16 bg-primary flex justify-center items-center rounded-lg shadow-md">
+              <div className="w-14 h-14 bg-primary flex justify-center items-center rounded-lg shadow-md">
                 <svg viewBox="0 0 180 120" className="w-24 h-24 text-white">
                   <path d={category.icon} fill="currentColor" />
                 </svg>

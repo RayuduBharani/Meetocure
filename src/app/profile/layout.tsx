@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/navbar/nav";
 
-const DoctorLayout = async ({
+const ProfileLayout = async ({
     children,
     admin,
     doctor,
@@ -15,7 +15,7 @@ const DoctorLayout = async ({
     user: React.ReactNode;
 }) => {
     const role = (await auth())?.user.role
-    const doctorContent = (() => {
+    const profileContent = (() => {
         switch (role) {
             case "ADMIN":
                 return admin;
@@ -30,9 +30,9 @@ const DoctorLayout = async ({
     return (
         <div className="w-full h-dvh">
             <NavBar role={role as string} />
-            {doctorContent()}
+            {profileContent()}
         </div>
     )
 };
 
-export default DoctorLayout;
+export default ProfileLayout;
